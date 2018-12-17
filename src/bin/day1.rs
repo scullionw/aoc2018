@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-const INPUT: &'static str = include_str!("data/input_day1.txt");
+const INPUT: &str = include_str!("data/input_day1.txt");
 
 fn solve_a(seq: &str) -> i64 {
     seq.trim()
