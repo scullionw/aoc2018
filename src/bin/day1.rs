@@ -10,16 +10,16 @@ fn solve_a(seq: &str) -> i64 {
 }
 
 fn solve_b(seq: &str) -> i64 {
-    let mut set = HashSet::new();
+    let mut reached = HashSet::new();
     seq.trim()
         .split_whitespace()
         .map(|x| x.parse::<i64>().unwrap())
         .cycle()
-        .scan(0, |state, x| {
-            *state += x;
-            Some(*state)
+        .scan(0, |csum, x| {
+            *csum += x;
+            Some(*csum)
         })
-        .find(|x| !set.insert(*x))
+        .find(|x| !reached.insert(*x))
         .unwrap()
 }
 

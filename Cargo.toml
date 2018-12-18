@@ -5,3 +5,4 @@ authors = ["scullionw <scuw1801@usherbrooke.ca>"]
 edition = "2018"
 
 [dependencies]
+itertools = "*"
