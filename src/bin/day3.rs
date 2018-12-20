@@ -44,7 +44,7 @@ fn solve_a(seq: &str) -> usize {
     for claim in seq.lines().map(Claim::from_str) {
         for (row, col) in claim.locations() {
             let loc = row * FABRIC_SIZE + col;
-            fabric[loc] = fabric[loc] + 1;
+            fabric[loc] = fabric[loc].saturating_add(1);
         }
     }
     fabric.iter().filter(|v| **v > 1).count()
@@ -56,7 +56,7 @@ fn solve_b(seq: &str) -> u32 {
     for claim in &claims {
         for (row, col) in claim.locations() {
             let loc = row * FABRIC_SIZE + col;
-            fabric[loc] = fabric[loc] + 1;
+            fabric[loc] = fabric[loc].saturating_add(1);
         }
     }
 
