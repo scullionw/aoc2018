@@ -32,4 +32,4 @@ fn main() {
 }
 
 test!(493, 413);
-bench!();
+bench!(A, B);

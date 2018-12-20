@@ -41,4 +41,4 @@ fn main() {
 }
 
 test!(5434, "agimdjvlhedpsyoqfzuknpjwt");
-bench!();
+bench!(A, B);
