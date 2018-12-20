@@ -6,18 +6,11 @@ use regex::Regex;
 
 const INPUT: &str = include_str!("data/input_day4.txt");
 
-// [1518-03-25 00:01] Guard #743 begins shift
-// [1518-09-15 00:34] falls asleep
-// [1518-10-11 00:27] wakes up
-
 lazy_static! {
-
-    static ref RECORD_RE: Regex =
-        Regex::new(r"^\[(?P<timestamp>.*)\] (?P<activity>.*)$").unwrap();
-
+    static ref RECORD_RE: Regex = Regex::new(r"^\[(?P<timestamp>.*)\] (?P<activity>.*)$").unwrap();
     static ref TIMESTAMP_RE: Regex =
-        Regex::new(r"^(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+) (?P<hour>\d+):(?P<minute>\d+)$").unwrap();
-
+        Regex::new(r"^(?P<year>\d+)-(?P<month>\d+)-(?P<day>\d+) (?P<hour>\d+):(?P<minute>\d+)$")
+            .unwrap();
     static ref ACTIVITY_RE: Regex =
         Regex::new(r"^(?P<variant>[a-zA-Z]+) (#(?P<id>\d+) )?(.*)$").unwrap();
 }
@@ -64,7 +57,7 @@ impl Record {
 enum Activity {
     WakeUp,
     FallAsleep,
-    BeginShift(u16)
+    BeginShift(u16),
 }
 
 impl Activity {
@@ -75,8 +68,8 @@ impl Activity {
             None => match &caps["variant"] {
                 "falls" => Activity::FallAsleep,
                 "wakes" => Activity::WakeUp,
-                _ => unreachable!()
-            }
+                _ => unreachable!(),
+            },
         }
     }
 }
@@ -92,7 +85,12 @@ fn solve_b(seq: &str) -> u32 {
 fn main() {
     // println!("{:?}", solve_a(INPUT));
     // println!("{:?}", solve_b(INPUT));
-    let mut records = INPUT.lines().take(10).map(Record::from_str).collect::<Vec<_>>();
+    let mut records = INPUT
+        .lines()
+        .take(10)
+        .map(Record::from_str)
+        .collect::<Vec<_>>();
+
     records.sort_unstable();
     for record in records {
         println!("{:?}", record)
