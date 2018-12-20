@@ -36,7 +36,7 @@ fn solve_b(seq: &str) -> String {
 }
 
 fn main() {
-    println!("{}", solve_a(INPUT));
+    println!("{:?}", solve_a(INPUT));
     println!("{:?}", solve_b(INPUT));
 }
 

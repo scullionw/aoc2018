@@ -27,8 +27,8 @@ fn solve_b(seq: &str) -> i64 {
 }
 
 fn main() {
-    println!("{}", solve_a(INPUT));
-    println!("{}", solve_b(INPUT));
+    println!("{:?}", solve_a(INPUT));
+    println!("{:?}", solve_b(INPUT));
 }
 
 test!(493, 413);
