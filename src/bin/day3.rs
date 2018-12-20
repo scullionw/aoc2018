@@ -3,9 +3,9 @@
 use aoc2018::*;
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::collections::HashMap;
 
 const INPUT: &str = include_str!("data/input_day3.txt");
+const FABRIC_SIZE: usize = 1000;
 
 lazy_static! {
     static ref CLAIM_RE: Regex =
@@ -14,10 +14,10 @@ lazy_static! {
 
 struct Claim {
     pub id: u32,
-    pub row: u32,
-    pub col: u32,
-    pub h: u32,
-    pub w: u32,
+    pub row: usize,
+    pub col: usize,
+    pub h: usize,
+    pub w: usize,
 }
 
 impl Claim {
@@ -32,7 +32,7 @@ impl Claim {
         }
     }
 
-    fn locations(&self) -> impl Iterator<Item = (u32, u32)> {
+    fn locations(&self) -> impl Iterator<Item = (usize, usize)> {
         let rows = (self.row + 1)..(self.row + 1 + self.h);
         let cols = (self.col + 1)..(self.col + 1 + self.w);
         rows.flat_map(move |row| cols.clone().map(move |col| (row, col)))
@@ -40,28 +40,33 @@ impl Claim {
 }
 
 fn solve_a(seq: &str) -> usize {
-    let mut fabric = HashMap::new();
-    let claims = seq.lines().map(Claim::from_str).collect::<Vec<_>>();
-    for claim in claims {
+    let mut fabric = [0u8; FABRIC_SIZE * FABRIC_SIZE];
+    for claim in seq.lines().map(Claim::from_str) {
         for (row, col) in claim.locations() {
-            *fabric.entry((row, col)).or_insert(0) += 1
+            let loc = row * FABRIC_SIZE + col;
+            fabric[loc] = fabric[loc] + 1;
         }
     }
-    fabric.values().filter(|v| **v > 1).count()
+    fabric.iter().filter(|v| **v > 1).count()
 }
 
 fn solve_b(seq: &str) -> u32 {
-    let mut fabric = HashMap::new();
+    let mut fabric = [0u8; FABRIC_SIZE * FABRIC_SIZE];
     let claims = seq.lines().map(Claim::from_str).collect::<Vec<_>>();
     for claim in &claims {
         for (row, col) in claim.locations() {
-            *fabric.entry((row, col)).or_insert(0) += 1;
+            let loc = row * FABRIC_SIZE + col;
+            fabric[loc] = fabric[loc] + 1;
         }
     }
 
     claims
         .iter()
-        .find(|claim| claim.locations().all(|loc| fabric[&loc] == 1))
+        .find(|claim| {
+            claim
+                .locations()
+                .all(|(row, col)| fabric[row * FABRIC_SIZE + col] == 1)
+        })
         .unwrap()
         .id
 }
@@ -71,5 +76,5 @@ fn main() {
     println!("{:?}", solve_b(INPUT));
 }
 
-test!(101469);
+test!(101469, 1067);
 bench!(A, B);
