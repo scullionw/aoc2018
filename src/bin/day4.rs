@@ -3,6 +3,7 @@
 use aoc2018::*;
 use lazy_static::lazy_static;
 use regex::Regex;
+use std::collections::HashMap;
 
 const INPUT: &str = include_str!("data/input_day4.txt");
 
@@ -74,28 +75,120 @@ impl Activity {
     }
 }
 
-fn solve_a(seq: &str) -> usize {
-    unimplemented!()
+#[derive(Debug)]
+struct Day {
+    id: u16,
+    shift: Vec<u8>,
 }
 
-fn solve_b(seq: &str) -> u32 {
-    unimplemented!()
-}
+impl Day {
+    fn from_records(records: &[&Record]) -> Day {
+        let mut shift = vec![0u8; 60];
+        let mut prev_time = 0;
+        let mut guard_id = None;
+        for record in records {
+            match record.activity {
+                Activity::BeginShift(id) => guard_id = Some(id),
+                Activity::FallAsleep => {
+                    let now = record.time.minute as usize;
+                    for minute in &mut shift[prev_time..now] {
+                        *minute = 0; // 0 is awake
+                        prev_time = now;
+                    }
+                }
+                Activity::WakeUp => {
+                    let now = record.time.minute as usize;
+                    for minute in &mut shift[prev_time..now] {
+                        *minute = 1; // 1 is asleep
+                        prev_time = now;
+                    }
+                }
+            }
+        }
+        // Set awake until end of shift
+        for minute in &mut shift[prev_time..] {
+            *minute = 0;
+        }
+        Day {
+            id: guard_id.unwrap(),
+            shift,
+        }
+    }
 
-fn main() {
-    // println!("{:?}", solve_a(INPUT));
-    // println!("{:?}", solve_b(INPUT));
-    let mut records = INPUT
-        .lines()
-        .take(10)
-        .map(Record::from_str)
-        .collect::<Vec<_>>();
-
-    records.sort_unstable();
-    for record in records {
-        println!("{:?}", record)
+    fn split_days(records: &mut [Record]) -> Vec<Day> {
+        records.sort_unstable();
+        let mut days = Vec::new();
+        let mut day_records = Vec::new();
+        for record in records.iter() {
+            match record.activity {
+                Activity::BeginShift(_) if !day_records.is_empty() => {
+                    let day = Day::from_records(&day_records.drain(..).collect::<Vec<_>>());
+                    days.push(day);
+                    day_records.push(record)
+                }
+                _ => day_records.push(record),
+            }
+        }
+        let day = Day::from_records(&day_records.drain(..).collect::<Vec<_>>());
+        days.push(day);
+        days
     }
 }
 
-// test!(101469);
-// bench!(A);
+fn solve_a(seq: &str) -> usize {
+    let mut records = seq.lines().map(Record::from_str).collect::<Vec<_>>();
+    let days = Day::split_days(&mut records);
+    let mut counter = HashMap::new();
+    for day in &days {
+        *counter.entry(day.id).or_insert(0) += day.shift.iter().filter(|min| **min == 1).count(); // use sum
+    }
+    let sleepiest_guard = counter.iter().max_by_key(|&(_, time_asleep)| time_asleep).unwrap().0;
+
+    let sleepy_guard_shifts = days
+        .iter()
+        .filter(|day| day.id == *sleepiest_guard)
+        .map(|d| d.shift.clone());
+
+    let mut shift_sum = vec![0; 60];
+    for shift in sleepy_guard_shifts {
+        for i in 0..60 {
+            shift_sum[i] += shift[i];
+        }
+    }
+
+    let sleepiest_minute = shift_sum
+        .iter()
+        .enumerate()
+        .max_by_key(|&(_, el)| el)
+        .unwrap()
+        .0;
+
+    (*sleepiest_guard as usize) * sleepiest_minute
+}
+
+fn solve_b(seq: &str) -> usize {
+    let mut records = seq.lines().map(Record::from_str).collect::<Vec<_>>();
+    let days = Day::split_days(&mut records);
+    let mut counter = HashMap::new();
+    for day in &days {
+        let shift_sum = counter.entry(day.id).or_insert(vec![0u8; 60]);
+        for i in 0..60 {
+            (*shift_sum)[i] += day.shift[i]
+        }
+    }
+    let (id, (minute, _)) = counter
+        .iter()
+        .map(|(id, shift_sum)| (id, shift_sum.iter().enumerate().max_by_key(|&(_, time_asleep)| time_asleep).unwrap()))
+        .max_by_key(|&(_, (_, time_asleep))| time_asleep)
+        .unwrap();
+
+    (*id as usize) * minute
+}
+
+fn main() {
+    println!("{:?}", solve_a(INPUT));
+    println!("{:?}", solve_b(INPUT));
+}
+
+test!(60438, 47989);
+bench!(A, B);
