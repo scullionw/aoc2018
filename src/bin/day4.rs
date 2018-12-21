@@ -142,7 +142,11 @@ fn solve_a(seq: &str) -> usize {
     for day in &days {
         *counter.entry(day.id).or_insert(0) += day.shift.iter().filter(|min| **min == 1).count(); // use sum
     }
-    let sleepiest_guard = counter.iter().max_by_key(|&(_, time_asleep)| time_asleep).unwrap().0;
+    let sleepiest_guard = counter
+        .iter()
+        .max_by_key(|&(_, time_asleep)| time_asleep)
+        .unwrap()
+        .0;
 
     let sleepy_guard_shifts = days
         .iter()
@@ -178,7 +182,16 @@ fn solve_b(seq: &str) -> usize {
     }
     let (id, (minute, _)) = counter
         .iter()
-        .map(|(id, shift_sum)| (id, shift_sum.iter().enumerate().max_by_key(|&(_, time_asleep)| time_asleep).unwrap()))
+        .map(|(id, shift_sum)| {
+            (
+                id,
+                shift_sum
+                    .iter()
+                    .enumerate()
+                    .max_by_key(|&(_, time_asleep)| time_asleep)
+                    .unwrap(),
+            )
+        })
         .max_by_key(|&(_, (_, time_asleep))| time_asleep)
         .unwrap();
 
