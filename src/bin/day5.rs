@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::{test, bench};
+use aoc2018::{bench, test};
 
 const INPUT: &str = include_str!("data/input_day5.txt");
 
@@ -28,9 +28,9 @@ fn solve_a(seq: &str) -> usize {
                 idx += 1;
             }
         }
-        
+
         if marked {
-           polymer.retain(|(_, marked)| !marked);
+            polymer.retain(|(_, marked)| !marked);
         } else {
             break polymer.len();
         }
@@ -43,4 +43,3 @@ fn opposite_polarity(u1: Unit, u2: Unit) -> bool {
 
 test!(9386);
 bench!(A);
-
