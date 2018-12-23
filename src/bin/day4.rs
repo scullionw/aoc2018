@@ -140,7 +140,7 @@ fn solve_a(seq: &str) -> usize {
     let days = Day::split_days(&mut records);
     let mut counter = HashMap::new();
     for day in &days {
-        *counter.entry(day.id).or_insert(0) += day.shift.iter().filter(|min| **min == 1).count(); // use sum
+        *counter.entry(day.id).or_insert(0) += bytecount::count(&day.shift, 1); // use sum
     }
     let sleepiest_guard = counter
         .iter()
@@ -175,7 +175,7 @@ fn solve_b(seq: &str) -> usize {
     let days = Day::split_days(&mut records);
     let mut counter = HashMap::new();
     for day in &days {
-        let shift_sum = counter.entry(day.id).or_insert(vec![0u8; 60]);
+        let shift_sum = counter.entry(day.id).or_insert_with(|| vec![0u8; 60]);
         for i in 0..60 {
             (*shift_sum)[i] += day.shift[i]
         }
