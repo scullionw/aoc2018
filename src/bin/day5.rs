@@ -1,18 +1,38 @@
 #![feature(test)]
 
 use aoc2018::{bench, test};
+use std::iter;
 
 const INPUT: &str = include_str!("data/input_day5.txt");
 
 type Unit = char;
+type Polymer = Vec<(Unit, bool)>;
 
 fn main() {
     println!("{:?}", solve_a(INPUT));
+    println!("{:?}", solve_b(INPUT));
 }
 
 fn solve_a(seq: &str) -> usize {
-    let mut polymer: Vec<(Unit, bool)> = seq.trim().chars().zip(std::iter::repeat(false)).collect();
+    let polymer = seq.trim().chars().zip(iter::repeat(false)).collect();
+    collapse(polymer)
+}
 
+fn solve_b(seq: &str) -> usize {
+    let polymer: Polymer = seq.trim().chars().zip(iter::repeat(false)).collect();
+    let units = (0..26).map(|x| ((x + b'a') as Unit, (x + b'A') as Unit));
+
+    units
+        .map(|(u1, u2)| {
+            let mut improved = polymer.clone();
+            improved.retain(|&(u, _)| u != u1 && u != u2);
+            collapse(improved)
+        })
+        .min()
+        .unwrap()
+}
+
+fn collapse(mut polymer: Polymer) -> usize {
     loop {
         let mut idx = 0;
         let mut marked = false;
@@ -28,7 +48,7 @@ fn solve_a(seq: &str) -> usize {
                 idx += 1;
             }
         }
-
+        // Remove all units that were marked in this pass, or return length
         if marked {
             polymer.retain(|(_, marked)| !marked);
         } else {
@@ -41,5 +61,5 @@ fn opposite_polarity(u1: Unit, u2: Unit) -> bool {
     u1 != u2 && u1.eq_ignore_ascii_case(&u2)
 }
 
-test!(9386);
-bench!(A);
+test!(9386, 4876);
+bench!(A, B);
