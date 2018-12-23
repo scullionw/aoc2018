@@ -11,32 +11,28 @@ fn main() {
 }
 
 fn solve_a(seq: &str) -> usize {
-    let mut polymer: Vec<Unit> = seq.trim().chars().collect();
-    let mut marked = Vec::with_capacity(polymer.len());
+    let mut polymer: Vec<(Unit, bool)> = seq.trim().chars().zip(std::iter::repeat(false)).collect();
 
     loop {
         let mut idx = 0;
+        let mut marked = false;
         // Mark all (idx, idx + 1) pairs that will react
         while idx < polymer.len() - 1 {
-            if opposite_polarity(polymer[idx], polymer[idx + 1]) {
-                marked.push(idx);
-                marked.push(idx + 1);
+            if opposite_polarity(polymer[idx].0, polymer[idx + 1].0) {
+                polymer[idx].1 = true;
+                polymer[idx + 1].1 = true;
+                marked = true;
                 // Skip the marked unit
                 idx += 2;
             } else {
                 idx += 1;
             }
         }
-
-        if marked.is_empty() {
-            break polymer.len();
+        
+        if marked {
+           polymer.retain(|(_, marked)| !marked);
         } else {
-            // Iterate in reverse order so that all indexes
-            // remain valid after remove()
-            for i in marked.iter().rev() {
-                polymer.remove(*i);
-            }
-            marked.clear();
+            break polymer.len();
         }
     }
 }
