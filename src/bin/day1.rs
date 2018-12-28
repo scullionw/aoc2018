@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::*;
+use aoc2018::benchtest;
 use std::collections::HashSet;
 
 const INPUT: &str = include_str!("data/input_day1.txt");
@@ -31,5 +31,7 @@ fn main() {
     println!("{:?}", solve_b(INPUT));
 }
 
-test!(493, 413);
-bench!(A, B);
+benchtest! {
+    part_a_test: solve_a(INPUT) => 493,
+    part_b_test: solve_b(INPUT) => 413
+}

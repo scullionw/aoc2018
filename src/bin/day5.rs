@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::{bench, test};
+use aoc2018::benchtest;
 use std::iter;
 
 const INPUT: &str = include_str!("data/input_day5.txt");
@@ -61,5 +61,7 @@ fn opposite_polarity(u1: Unit, u2: Unit) -> bool {
     u1 != u2 && u1.eq_ignore_ascii_case(&u2)
 }
 
-test!(9386, 4876);
-bench!(A, B);
+benchtest! {
+    part_a_test: solve_a(INPUT) => 9386,
+    part_b_test: solve_b(INPUT) => 4876
+}

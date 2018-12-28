@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::*;
+use aoc2018::benchtest;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
@@ -203,5 +203,7 @@ fn main() {
     println!("{:?}", solve_b(INPUT));
 }
 
-test!(60438, 47989);
-bench!(A, B);
+benchtest! {
+    part_a_test: solve_a(INPUT) => 60438,
+    part_b_test: solve_b(INPUT) => 47989
+}

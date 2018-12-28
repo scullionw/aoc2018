@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::*;
+use aoc2018::benchtest;
 use itertools::Itertools;
 use std::collections::HashMap;
 
@@ -40,5 +40,7 @@ fn main() {
     println!("{:?}", solve_b(INPUT));
 }
 
-test!(5434, "agimdjvlhedpsyoqfzuknpjwt");
-bench!(A, B);
+benchtest! {
+    part_a_test: solve_a(INPUT) => 5434,
+    part_b_test: solve_b(INPUT) => "agimdjvlhedpsyoqfzuknpjwt"
+}

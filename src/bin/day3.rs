@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::*;
+use aoc2018::benchtest;
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -76,5 +76,7 @@ fn main() {
     println!("{:?}", solve_b(INPUT));
 }
 
-test!(101469, 1067);
-bench!(A, B);
+benchtest! {
+    part_a_test: solve_a(INPUT) => 101469,
+    part_b_test: solve_b(INPUT) => 1067
+}
