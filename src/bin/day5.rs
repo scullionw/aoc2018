@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::benchtest;
+use benchtest::benchtest;
 use std::iter;
 
 const INPUT: &str = include_str!("data/input_day5.txt");

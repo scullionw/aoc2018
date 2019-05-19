@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::benchtest;
+use benchtest::benchtest;
 use std::collections::HashSet;
 
 const INPUT: &str = include_str!("data/input_day1.txt");

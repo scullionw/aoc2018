@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::benchtest;
+use benchtest::benchtest;
 use std::collections::HashMap;
 use std::ops::RangeInclusive;
 
@@ -138,7 +138,7 @@ fn solve_b(seq: &str) -> Result<u32> {
         .collect::<Result<Vec<_>>>()?;
 
     let limits = Limits::from_coords(&coords);
- 
+
     let mut safe_count = 0;
     for x in limits.columns() {
         for y in limits.rows() {

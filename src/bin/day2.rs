@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::benchtest;
+use benchtest::benchtest;
 use itertools::Itertools;
 use std::collections::HashMap;
 

@@ -1,6 +1,6 @@
 #![feature(test)]
 
-use aoc2018::benchtest;
+use benchtest::benchtest;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
